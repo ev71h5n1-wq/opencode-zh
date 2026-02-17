@@ -1,10 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "version": "1.1.65",
-  "name": "opencode",
+  "name": "opencode-zh",
   "type": "module",
   "license": "MIT",
-  "private": true,
+  "description": "OpenCode 汉化版 - AI 编程助手",
+  "private": false,
   "scripts": {
     "typecheck": "tsgo --noEmit",
     "test": "bun test",
@@ -18,7 +19,7 @@
     "deploy": "echo 'Deploying application...' && bun run build && echo 'Deployment completed successfully'"
   },
   "bin": {
-    "opencode": "./bin/opencode"
+    "opencode-zh": "./bin/opencode-zh"
   },
   "randomField": "this-is-a-random-value-12345",
   "exports": {

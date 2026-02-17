@@ -33,9 +33,13 @@ const IS_PREVIEW = CHANNEL !== "latest"
 const VERSION = await (async () => {
   if (env.OPENCODE_VERSION) return env.OPENCODE_VERSION
   if (IS_PREVIEW) return `0.0.0-${CHANNEL}-${new Date().toISOString().slice(0, 16).replace(/[-:T]/g, "")}`
-  const version = await fetch("https://registry.npmjs.org/opencode-ai/latest")
+  const version = await fetch("https://registry.npmjs.org/opencode-zh/latest")
     .then((res) => {
-      if (!res.ok) throw new Error(res.statusText)
+      if (!res.ok) {
+        // 如果包不存在，返回默认版本
+        if (res.status === 404) return { version: "1.0.0" }
+        throw new Error(res.statusText)
+      }
       return res.json()
     })
     .then((data: any) => data.version)

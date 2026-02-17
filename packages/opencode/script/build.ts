@@ -28,65 +28,79 @@ console.log("Generated models-snapshot.ts")
 const singleFlag = process.argv.includes("--single")
 const baselineFlag = process.argv.includes("--baseline")
 const skipInstall = process.argv.includes("--skip-install")
+const windowsOnlyFlag = process.argv.includes("--windows-only")
 
 const allTargets: {
   os: string
   arch: "arm64" | "x64"
   abi?: "musl"
   avx2?: false
-}[] = [
-  {
-    os: "linux",
-    arch: "arm64",
-  },
-  {
-    os: "linux",
-    arch: "x64",
-  },
-  {
-    os: "linux",
-    arch: "x64",
-    avx2: false,
-  },
-  {
-    os: "linux",
-    arch: "arm64",
-    abi: "musl",
-  },
-  {
-    os: "linux",
-    arch: "x64",
-    abi: "musl",
-  },
-  {
-    os: "linux",
-    arch: "x64",
-    abi: "musl",
-    avx2: false,
-  },
-  {
-    os: "darwin",
-    arch: "arm64",
-  },
-  {
-    os: "darwin",
-    arch: "x64",
-  },
-  {
-    os: "darwin",
-    arch: "x64",
-    avx2: false,
-  },
-  {
-    os: "win32",
-    arch: "x64",
-  },
-  {
-    os: "win32",
-    arch: "x64",
-    avx2: false,
-  },
-]
+}[] = windowsOnlyFlag
+  ? [
+      // 仅 Windows x64 构建
+      {
+        os: "win32",
+        arch: "x64",
+      },
+      {
+        os: "win32",
+        arch: "x64",
+        avx2: false,
+      },
+    ]
+  : [
+      {
+        os: "linux",
+        arch: "arm64",
+      },
+      {
+        os: "linux",
+        arch: "x64",
+      },
+      {
+        os: "linux",
+        arch: "x64",
+        avx2: false,
+      },
+      {
+        os: "linux",
+        arch: "arm64",
+        abi: "musl",
+      },
+      {
+        os: "linux",
+        arch: "x64",
+        abi: "musl",
+      },
+      {
+        os: "linux",
+        arch: "x64",
+        abi: "musl",
+        avx2: false,
+      },
+      {
+        os: "darwin",
+        arch: "arm64",
+      },
+      {
+        os: "darwin",
+        arch: "x64",
+      },
+      {
+        os: "darwin",
+        arch: "x64",
+        avx2: false,
+      },
+      {
+        os: "win32",
+        arch: "x64",
+      },
+      {
+        os: "win32",
+        arch: "x64",
+        avx2: false,
+      },
+    ]
 
 const targets = singleFlag
   ? allTargets.filter((item) => {
