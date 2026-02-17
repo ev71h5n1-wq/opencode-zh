@@ -12,8 +12,10 @@ if (!expectedBunVersion) {
 // relax version requirement
 const expectedBunVersionRange = `^${expectedBunVersion}`
 
-if (!semver.satisfies(process.versions.bun, expectedBunVersionRange)) {
-  throw new Error(`This script requires bun@${expectedBunVersionRange}, but you are using bun@${process.versions.bun}`)
+// 汉化版：放宽版本要求以兼容更多环境
+const minBunVersion = expectedBunVersion.split(".").slice(0, 2).join(".")
+if (!semver.satisfies(process.versions.bun, ">=" + minBunVersion)) {
+  throw new Error(`This script requires bun@>=${minBunVersion}, but you are using bun@${process.versions.bun}`)
 }
 
 const env = {
