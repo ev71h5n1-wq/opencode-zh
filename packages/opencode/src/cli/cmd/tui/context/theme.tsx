@@ -196,7 +196,41 @@ export async function loadDefaultThemes() {
   return DEFAULT_THEMES
 }
 
-function resolveTheme(theme: ThemeJson, mode: "dark" | "light") {
+function resolveTheme(theme: ThemeJson | undefined, mode: "dark" | "light"): Theme {
+  if (!theme || !theme.theme) {
+    // 返回默认主题
+    return resolveTheme({
+      name: "fallback",
+      theme: {
+        bg: "#0d1117",
+        fg: "#c9d1d9",
+        text: "#c9d1d9",
+        textMuted: "#8b949e",
+        warning: "#f0883e",
+        error: "#f85149",
+        success: "#3fb950",
+        info: "#58a6ff",
+        border: "#30363d",
+        shadow: "#010409",
+        agentBuild: "#79c0ff",
+        agentPlan: "#d2a8ff",
+        agentAsk: "#7ee787",
+        agentExecute: "#ffa657",
+        gradientStart: "#58a6ff",
+        gradientEnd: "#a371f7",
+        logo: "#79c0ff",
+        buttonBg: "#21262d",
+        buttonBorder: "#30363d",
+        listSelectedBg: "#161b22",
+        listSelectedFg: "#c9d1d9",
+        diffAddedBg: "rgba(46, 160, 67, 0.15)",
+        diffAddedFg: "#3fb950",
+        diffRemovedBg: "rgba(248, 81, 73, 0.15)",
+        diffRemovedFg: "#f85149",
+        thinkingOpacity: 0.5,
+      },
+    }, mode)
+  }
   const defs = theme.defs ?? {}
   function resolveColor(c: ColorValue): RGBA {
     if (c instanceof RGBA) return c
@@ -379,7 +413,8 @@ export const { use: useTheme, provider: ThemeProvider } = createSimpleContext({
     })
 
     const values = createMemo(() => {
-      return resolveTheme(store.themes[store.active] ?? store.themes.opencode, store.mode)
+      const theme = store.themes[store.active] ?? store.themes.opencode
+      return resolveTheme(theme, store.mode)
     })
 
     const syntax = createMemo(() => generateSyntax(values()))
@@ -650,11 +685,13 @@ function generateMutedTextColor(bg: RGBA, isDark: boolean): RGBA {
   return RGBA.fromInts(grayValue, grayValue, grayValue)
 }
 
-function generateSyntax(theme: Theme) {
+function generateSyntax(theme: Theme | undefined) {
+  if (!theme) return SyntaxStyle.fromTheme([])
   return SyntaxStyle.fromTheme(getSyntaxRules(theme))
 }
 
-function generateSubtleSyntax(theme: Theme) {
+function generateSubtleSyntax(theme: Theme | undefined) {
+  if (!theme) return SyntaxStyle.fromTheme([])
   const rules = getSyntaxRules(theme)
   return SyntaxStyle.fromTheme(
     rules.map((rule) => {
@@ -668,7 +705,7 @@ function generateSubtleSyntax(theme: Theme) {
               Math.round(fg.r * 255),
               Math.round(fg.g * 255),
               Math.round(fg.b * 255),
-              Math.round(theme.thinkingOpacity * 255),
+              Math.round((theme.thinkingOpacity ?? 0.5) * 255),
             ),
           },
         }
