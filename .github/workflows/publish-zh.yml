@@ -117,7 +117,7 @@ jobs:
           
           # 确保脚本可执行
           chmod +x bin/opencode-zh.js
-          chmod +x scripts/install.js
+          chmod +x scripts/install.cjs
 
       - name: Publish to npm
         run: |
