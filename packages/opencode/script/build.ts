@@ -207,10 +207,9 @@ if (Script.release) {
       artifacts.push(zipPath)
     }
   }
-  // 逐个上传文件
-  for (const artifact of artifacts) {
-    await $`gh release upload v${Script.version} ${artifact} --clobber`
-  }
+  // Release 上传由 GitHub Actions workflow 处理
+  // 这里只生成 artifacts
+  console.log("Generated artifacts:", artifacts.join(", "))
 }
 
 export { binaries }
