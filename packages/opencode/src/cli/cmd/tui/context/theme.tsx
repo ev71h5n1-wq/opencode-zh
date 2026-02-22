@@ -198,7 +198,7 @@ export async function loadDefaultThemes() {
 
 function resolveTheme(theme: ThemeJson | undefined, mode: "dark" | "light"): Theme {
   if (!theme || !theme.theme) {
-    // 返回默认主题
+    // 返回默认主题 - 使用简单的十六进制颜色
     return resolveTheme({
       name: "fallback",
       theme: {
@@ -223,9 +223,9 @@ function resolveTheme(theme: ThemeJson | undefined, mode: "dark" | "light"): The
         buttonBorder: "#30363d",
         listSelectedBg: "#161b22",
         listSelectedFg: "#c9d1d9",
-        diffAddedBg: "rgba(46, 160, 67, 0.15)",
+        diffAddedBg: "#0d2815",
         diffAddedFg: "#3fb950",
-        diffRemovedBg: "rgba(248, 81, 73, 0.15)",
+        diffRemovedBg: "#2d1515",
         diffRemovedFg: "#f85149",
         thinkingOpacity: 0.5,
       },
