@@ -40,11 +40,21 @@ function getBinaryName() {
   return 'opencode-zh-' + p.platform + '-' + p.arch;
 }
 
+function getProxy() {
+  // 检测代理环境变量
+  var proxy = process.env.HTTPS_PROXY || process.env.https_PROXY ||
+              process.env.HTTP_PROXY || process.env.http_proxy ||
+              process.env.ALL_PROXY || process.env.all_proxy;
+  return proxy || '';
+}
+
 function downloadWithCurl(url, dest) {
   try {
-    console.log('   使用 curl 下载...');
-    execSync('curl -L -# -o "' + dest + '" "' + url + '"', { stdio: 'inherit' });
-    
+    var proxy = getProxy();
+    var proxyArg = proxy ? ' --proxy "' + proxy + '"' : '';
+    console.log(proxy ? '   使用代理: ' + proxy : '   使用 curl 下载...');
+    execSync('curl -L -#' + proxyArg + ' -o "' + dest + '" "' + url + '"', { stdio: 'inherit' });
+
     if (fs.existsSync(dest) && fs.statSync(dest).size > 1000) {
       return true;
     }
