@@ -17,7 +17,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "postinstall": "node scripts/install.js"
+    "postinstall": "node scripts/install.cjs"
   },
   "files": [
     "bin/",
