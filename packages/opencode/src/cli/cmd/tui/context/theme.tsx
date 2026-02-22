@@ -386,10 +386,14 @@ export const { use: useTheme, provider: ThemeProvider } = createSimpleContext({
     const subtleSyntax = createMemo(() => generateSubtleSyntax(values()))
 
     return {
-      theme: new Proxy(values(), {
+      theme: new Proxy({}, {
         get(_target, prop) {
-          // @ts-expect-error
-          return values()[prop]
+          const v = values()
+          if (v && typeof v === 'object') {
+            // @ts-expect-error
+            return v[prop]
+          }
+          return undefined
         },
       }),
       get selected() {
