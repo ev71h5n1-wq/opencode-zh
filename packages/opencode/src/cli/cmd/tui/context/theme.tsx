@@ -3,39 +3,56 @@ import path from "path"
 import { createEffect, createMemo, onMount } from "solid-js"
 import { useSync } from "@tui/context/sync"
 import { createSimpleContext } from "./helper"
-import aura from "./theme/aura.json" with { type: "json" }
-import ayu from "./theme/ayu.json" with { type: "json" }
-import catppuccin from "./theme/catppuccin.json" with { type: "json" }
-import catppuccinFrappe from "./theme/catppuccin-frappe.json" with { type: "json" }
-import catppuccinMacchiato from "./theme/catppuccin-macchiato.json" with { type: "json" }
-import cobalt2 from "./theme/cobalt2.json" with { type: "json" }
-import cursor from "./theme/cursor.json" with { type: "json" }
-import dracula from "./theme/dracula.json" with { type: "json" }
-import everforest from "./theme/everforest.json" with { type: "json" }
-import flexoki from "./theme/flexoki.json" with { type: "json" }
-import github from "./theme/github.json" with { type: "json" }
-import gruvbox from "./theme/gruvbox.json" with { type: "json" }
-import kanagawa from "./theme/kanagawa.json" with { type: "json" }
-import material from "./theme/material.json" with { type: "json" }
-import matrix from "./theme/matrix.json" with { type: "json" }
-import mercury from "./theme/mercury.json" with { type: "json" }
-import monokai from "./theme/monokai.json" with { type: "json" }
-import nightowl from "./theme/nightowl.json" with { type: "json" }
-import nord from "./theme/nord.json" with { type: "json" }
-import osakaJade from "./theme/osaka-jade.json" with { type: "json" }
-import onedark from "./theme/one-dark.json" with { type: "json" }
-import opencode from "./theme/opencode.json" with { type: "json" }
-import orng from "./theme/orng.json" with { type: "json" }
-import lucentOrng from "./theme/lucent-orng.json" with { type: "json" }
-import palenight from "./theme/palenight.json" with { type: "json" }
-import rosepine from "./theme/rosepine.json" with { type: "json" }
-import solarized from "./theme/solarized.json" with { type: "json" }
-import synthwave84 from "./theme/synthwave84.json" with { type: "json" }
-import tokyonight from "./theme/tokyonight.json" with { type: "json" }
-import vercel from "./theme/vercel.json" with { type: "json" }
-import vesper from "./theme/vesper.json" with { type: "json" }
-import zenburn from "./theme/zenburn.json" with { type: "json" }
-import carbonfox from "./theme/carbonfox.json" with { type: "json" }
+// Theme imports - using dynamic import to avoid Bun compile issues
+const loadTheme = async (name: string) => {
+  const file = Bun.file(new URL(`./theme/${name}.json`, import.meta.url))
+  return file.json()
+}
+
+let aura: ThemeJson, ayu: ThemeJson, catppuccin: ThemeJson, catppuccinFrappe: ThemeJson
+let catppuccinMacchiato: ThemeJson, cobalt2: ThemeJson, cursor: ThemeJson, dracula: ThemeJson
+let everforest: ThemeJson, flexoki: ThemeJson, github: ThemeJson, gruvbox: ThemeJson
+let kanagawa: ThemeJson, material: ThemeJson, matrix: ThemeJson, mercury: ThemeJson
+let monokai: ThemeJson, nightowl: ThemeJson, nord: ThemeJson, osakaJade: ThemeJson
+let onedark: ThemeJson, opencode: ThemeJson, orng: ThemeJson, lucentOrng: ThemeJson
+let palenight: ThemeJson, rosepine: ThemeJson, solarized: ThemeJson, synthwave84: ThemeJson
+let tokyonight: ThemeJson, vercel: ThemeJson, vesper: ThemeJson, zenburn: ThemeJson, carbonfox: ThemeJson
+
+const themesLoaded = (async () => {
+  aura = await loadTheme("aura")
+  ayu = await loadTheme("ayu")
+  catppuccin = await loadTheme("catppuccin")
+  catppuccinFrappe = await loadTheme("catppuccin-frappe")
+  catppuccinMacchiato = await loadTheme("catppuccin-macchiato")
+  cobalt2 = await loadTheme("cobalt2")
+  cursor = await loadTheme("cursor")
+  dracula = await loadTheme("dracula")
+  everforest = await loadTheme("everforest")
+  flexoki = await loadTheme("flexoki")
+  github = await loadTheme("github")
+  gruvbox = await loadTheme("gruvbox")
+  kanagawa = await loadTheme("kanagawa")
+  material = await loadTheme("material")
+  matrix = await loadTheme("matrix")
+  mercury = await loadTheme("mercury")
+  monokai = await loadTheme("monokai")
+  nightowl = await loadTheme("nightowl")
+  nord = await loadTheme("nord")
+  osakaJade = await loadTheme("osaka-jade")
+  onedark = await loadTheme("one-dark")
+  opencode = await loadTheme("opencode")
+  orng = await loadTheme("orng")
+  lucentOrng = await loadTheme("lucent-orng")
+  palenight = await loadTheme("palenight")
+  rosepine = await loadTheme("rosepine")
+  solarized = await loadTheme("solarized")
+  synthwave84 = await loadTheme("synthwave84")
+  tokyonight = await loadTheme("tokyonight")
+  vercel = await loadTheme("vercel")
+  vesper = await loadTheme("vesper")
+  zenburn = await loadTheme("zenburn")
+  carbonfox = await loadTheme("carbonfox")
+})()
 import { useKV } from "./kv"
 import { useRenderer } from "@opentui/solid"
 import { createStore, produce } from "solid-js/store"
@@ -137,40 +154,46 @@ type ThemeJson = {
   }
 }
 
-export const DEFAULT_THEMES: Record<string, ThemeJson> = {
-  aura,
-  ayu,
-  catppuccin,
-  ["catppuccin-frappe"]: catppuccinFrappe,
-  ["catppuccin-macchiato"]: catppuccinMacchiato,
-  cobalt2,
-  cursor,
-  dracula,
-  everforest,
-  flexoki,
-  github,
-  gruvbox,
-  kanagawa,
-  material,
-  matrix,
-  mercury,
-  monokai,
-  nightowl,
-  nord,
-  ["one-dark"]: onedark,
-  ["osaka-jade"]: osakaJade,
-  opencode,
-  orng,
-  ["lucent-orng"]: lucentOrng,
-  palenight,
-  rosepine,
-  solarized,
-  synthwave84,
-  tokyonight,
-  vesper,
-  vercel,
-  zenburn,
-  carbonfox,
+export let DEFAULT_THEMES: Record<string, ThemeJson> = {}
+
+export async function loadDefaultThemes() {
+  await themesLoaded
+  DEFAULT_THEMES = {
+    aura,
+    ayu,
+    catppuccin,
+    ["catppuccin-frappe"]: catppuccinFrappe,
+    ["catppuccin-macchiato"]: catppuccinMacchiato,
+    cobalt2,
+    cursor,
+    dracula,
+    everforest,
+    flexoki,
+    github,
+    gruvbox,
+    kanagawa,
+    material,
+    matrix,
+    mercury,
+    monokai,
+    nightowl,
+    nord,
+    ["one-dark"]: onedark,
+    ["osaka-jade"]: osakaJade,
+    opencode,
+    orng,
+    ["lucent-orng"]: lucentOrng,
+    palenight,
+    rosepine,
+    solarized,
+    synthwave84,
+    tokyonight,
+    vesper,
+    vercel,
+    zenburn,
+    carbonfox,
+  }
+  return DEFAULT_THEMES
 }
 
 function resolveTheme(theme: ThemeJson, mode: "dark" | "light") {
@@ -293,7 +316,11 @@ export const { use: useTheme, provider: ThemeProvider } = createSimpleContext({
       if (theme) setStore("active", theme)
     })
 
-    function init() {
+    async function init() {
+      // 等待默认主题加载完成
+      await loadDefaultThemes()
+      setStore("themes", DEFAULT_THEMES)
+      
       resolveSystemTheme()
       getCustomThemes()
         .then((custom) => {
