@@ -37,15 +37,10 @@ const allTargets: {
   avx2?: false
 }[] = windowsOnlyFlag
   ? [
-      // 仅 Windows x64 构建
+      // 仅 Windows x64 构建（跳过 baseline，经常下载失败）
       {
         os: "win32",
         arch: "x64",
-      },
-      {
-        os: "win32",
-        arch: "x64",
-        avx2: false,
       },
     ]
   : [

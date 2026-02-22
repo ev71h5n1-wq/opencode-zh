@@ -40,45 +40,9 @@ function getPlatform() {
 }
 
 function supportsAvx2() {
-  const { platform, arch } = getPlatform();
-  if (arch !== 'x64') return false;
-
-  if (platform === 'windows') {
-    try {
-      const cmd = '(Add-Type -MemberDefinition "[DllImport(``"kernel32.dll``")] public static extern bool IsProcessorFeaturePresent(int ProcessorFeature);" -Name Kernel32 -Namespace Win32 -PassThru)::IsProcessorFeaturePresent(40)';
-      const result = execSync(`powershell -NoProfile -Command "${cmd}"`, {
-        encoding: 'utf8',
-        timeout: 5000,
-        windowsHide: true
-      });
-      return result.trim() === 'True' || result.trim() === '1';
-    } catch {
-      return false;
-    }
-  }
-
-  if (platform === 'darwin') {
-    try {
-      const result = execSync('sysctl -n hw.optional.avx2_0', {
-        encoding: 'utf8',
-        timeout: 1500
-      });
-      return result.trim() === '1';
-    } catch {
-      return false;
-    }
-  }
-
-  if (platform === 'linux') {
-    try {
-      const cpuinfo = fs.readFileSync('/proc/cpuinfo', 'utf8');
-      return /(^|\s)avx2(\s|$)/i.test(cpuinfo);
-    } catch {
-      return false;
-    }
-  }
-
-  return false;
+  // 总是返回 true，因为不再构建 baseline 版本
+  // 标准版本在大多数现代 CPU 上都能正常运行
+  return true;
 }
 
 function isMusl() {

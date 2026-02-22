@@ -57,7 +57,6 @@ jobs:
         run: |
           cd packages/opencode/dist
           Compress-Archive -Path opencode-zh-windows-x64/bin/* -DestinationPath opencode-zh-windows-x64.zip
-          Compress-Archive -Path opencode-zh-windows-x64-baseline/bin/* -DestinationPath opencode-zh-windows-x64-baseline.zip
         shell: pwsh
 
       - name: Upload artifacts
